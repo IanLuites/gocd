@@ -7,9 +7,11 @@ defmodule GoCD.Groups do
   """
   @spec get(module, String.t()) :: {:ok, Group.t()} | {:error, any}
   def get(server, group) do
-    if group = server |> list() |> Enum.find(&(&1.name == group)),
-      do: {:ok, group},
-      else: {:error, :unknown_group}
+    with {:ok, groups} <- list(server) do
+      if group = Enum.find(groups, &(&1.name == group)),
+        do: {:ok, group},
+        else: {:error, :unknown_group}
+    end
   end
 
   @doc ~S"""
