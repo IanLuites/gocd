@@ -35,16 +35,26 @@ defmodule GoCD.Server.API do
 
   @spec config(Keyword.t()) :: Keyword.t()
   defp config(opts) do
-    Keyword.merge(
-      [
-        format: :json_atoms,
-        headers: [
-          {"Accept", accept_version(opts[:version] || 0)}
-        ],
-        settings: [pool: opts[:pool] || :default, proxy: opts[:proxy]]
-      ],
-      opts
-    )
+    base = [
+      format: :json_atoms,
+      settings: [
+        pool: opts[:pool] || :default,
+        proxy: opts[:proxy]
+      ]
+    ]
+
+    base =
+      if v = Keyword.get(opts, :version, false) do
+        Keyword.put(base, :headers, [{"Accept", accept_version(v)}])
+      else
+        base
+      end
+
+    Keyword.merge(base, opts, fn
+      :headers, v1, v2 -> v1 ++ v2
+      :settings, v1, v2 -> Keyword.merge(v1, v2)
+      _key, _v1, v2 -> v2
+    end)
   end
 
   defmacro __using__(_opts \\ []) do
@@ -74,8 +84,8 @@ defmodule GoCD.Server.API do
 
       @doc false
       @spec post(version, String.t(), HTTPX.post_body()) :: {:ok, map} | {:error, any}
-      def post(version \\ 0, endpoint, body) do
-        with {:ok, opts} <- api_config(version), do: API.post(endpoint, body, opts)
+      def post(version \\ 0, endpoint, body, opts \\ []) do
+        with {:ok, o} <- api_config(version), do: API.post(endpoint, body, Keyword.merge(o, opts))
       end
     end
   end
