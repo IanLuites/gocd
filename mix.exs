@@ -4,7 +4,7 @@ defmodule GoCD.MixProject do
   def project do
     [
       app: :gocd,
-      version: "0.0.1",
+      version: "0.0.2",
       description: "A GoCD client library for Elixir.",
       elixir: "~> 1.7",
       start_permanent: Mix.env() == :prod,
@@ -60,7 +60,7 @@ defmodule GoCD.MixProject do
 
   defp deps do
     [
-      {:common_x, "~> 0.0.1"},
+      {:common_x, "~> 0.1"},
       {:httpx, "~> 0.0.16"},
 
       # Dev Only
