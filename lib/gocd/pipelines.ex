@@ -59,7 +59,12 @@ defmodule GoCD.Pipelines do
   def unpause(server, %Pipeline{name: name}), do: unpause(server, name)
 
   def unpause(server, name) do
-    with {:ok, _} <- server.post(1, "/go/api/pipelines/#{name}/unpause", {:json, nil}), do: :ok
+    with {:ok, _} <-
+           server.post(1, "/go/api/pipelines/#{name}/unpause", "",
+             format: :text,
+             headers: [{"Confirm", "true"}]
+           ),
+         do: :ok
   end
 
   @doc ~S"""
