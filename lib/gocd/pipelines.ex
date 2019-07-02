@@ -68,6 +68,43 @@ defmodule GoCD.Pipelines do
   end
 
   @doc ~S"""
+  Create a new GoCD pipeline [config].
+  """
+  @spec create(module, String.t(), String.t(), Keyword.t()) ::
+          {:ok, Pipeline.t()} | {:error, any}
+  def create(server, name, group, opts \\ []) do
+    data =
+      [
+        label_template: Keyword.get(opts, :label_template, "${COUNT}"),
+        enable_pipeline_locking: Keyword.get(opts, :enable_pipeline_locking),
+        name: name,
+        template: Keyword.get(opts, :template),
+        origin: Keyword.get(opts, :origin),
+        parameters: Keyword.get(opts, :parameters),
+        environment_variables: Keyword.get(opts, :environment_variables),
+        materials: Keyword.get(opts, :materials, []),
+        tracking_tool: Keyword.get(opts, :tracking_tool),
+        timer: Keyword.get(opts, :timer)
+      ]
+      |> Enum.reject(&(elem(&1, 1) == nil))
+      |> Map.new()
+
+    cond do
+      is_nil(Map.get(data, :template)) and length(Map.get(data, :stages, [])) < 1 ->
+        {:error, :missing_template_and_stage}
+
+      data.materials == [] ->
+        {:error, :missing_material}
+
+      :create ->
+        with {:ok, data} <-
+               server.post(4, "/go/api/admin/pipelines", {:json, %{group: group, pipeline: data}}) do
+          Pipeline.parse(data)
+        end
+    end
+  end
+
+  @doc ~S"""
   Get a GoCD pipeline config.
   """
   @spec get(module, id) :: {:ok, Pipeline.t()} | {:error, any}

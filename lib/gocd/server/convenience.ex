@@ -52,6 +52,13 @@ defmodule GoCD.Server.Convenience do
       def pipeline(name), do: Pipelines.get(__MODULE__, name)
 
       @doc ~S"""
+      Create a new GoCD pipeline [config].
+      """
+      @spec create(String.t(), String.t(), Keyword.t()) ::
+              {:ok, Pipeline.t()} | {:error, any}
+      def create(name, group, opts \\ []), do: Pipelines.create(__MODULE__, name, group, opts)
+
+      @doc ~S"""
       List GoCD pipelines.
       """
       @spec pipelines(String.t() | nil) :: {:ok, [Pipeline.t()]} | {:error, any}
@@ -72,7 +79,6 @@ defmodule GoCD.Server.Convenience do
       Check whether a GoCD config group exists.
       """
       @spec group_exists?(String.t()) :: boolean
-
       def group_exists?(name), do: Groups.exists?(__MODULE__, name)
 
       @doc ~S"""
