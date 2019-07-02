@@ -10,6 +10,8 @@ defmodule GoCD.Pipeline do
   @type t :: %__MODULE__{
           name: String.t(),
           label: String.t(),
+          template: String.t(),
+          label_template: String.t(),
           materials: any,
           stages: any,
           environment_variables: [map]
@@ -19,6 +21,8 @@ defmodule GoCD.Pipeline do
     :name,
     :label,
     :materials,
+    :template,
+    :label_template,
     :stages,
     :environment_variables
   ]
@@ -41,6 +45,8 @@ defmodule GoCD.Pipeline do
        %__MODULE__{
          name: MapX.get(data, :name),
          label: MapX.get(data, :label),
+         template: MapX.get(data, :template),
+         label_template: MapX.get(data, :label_template),
          materials: materials,
          stages: stages,
          environment_variables: env_var
