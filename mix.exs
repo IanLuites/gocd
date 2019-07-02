@@ -22,7 +22,7 @@ defmodule GoCD.MixProject do
       dialyzer: [ignore_warnings: ".dialyzer", plt_add_deps: true],
 
       # Docs
-      name: "CommonX",
+      name: "GoCD",
       source_url: "https://github.com/IanLuites/gocd",
       homepage_url: "https://github.com/IanLuites/gocd",
       docs: [
@@ -61,11 +61,11 @@ defmodule GoCD.MixProject do
   defp deps do
     [
       {:common_x, "~> 0.0.1"},
-      {:httpx, "~> 0.0.12"},
+      {:httpx, "~> 0.0.16"},
 
       # Dev Only
-      {:analyze, "~> 0.1.3", optional: true, runtime: false, only: [:dev, :test]},
-      {:dialyxir, "~> 1.0.0-rc.4", optional: true, runtime: false, only: [:dev, :test]}
+      {:analyze, "~> 0.1.4", optional: true, runtime: false, only: [:dev, :test]},
+      {:dialyxir, "~> 1.0.0-rc.6", optional: true, runtime: false, only: [:dev, :test]}
     ]
   end
 end
