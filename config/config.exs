@@ -5,4 +5,4 @@ use Mix.Config
 #   ciphers: [
 #     aes: System.get_env("GOCD_AES_CIPHER"),
 #     des: System.get_env("GOCD_DES_CIPHER")
-#   ],
+#   ]
